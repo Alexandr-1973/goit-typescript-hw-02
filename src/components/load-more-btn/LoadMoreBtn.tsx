@@ -1,7 +1,9 @@
 import css from "./LoadMoreBtn.module.css";
 
-const LoadMoreBtn = ({ onLoadMore }) => {
-  const handleClick = () => {
+type OnLoadMore = { onLoadMore: () => void; };
+
+const LoadMoreBtn: React.FC<OnLoadMore> = ({ onLoadMore }) => {
+  const handleClick = (): void => {
     onLoadMore();
   };
   return (

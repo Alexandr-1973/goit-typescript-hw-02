@@ -1,7 +1,17 @@
 import Modal from "react-modal";
 import css from "./ImageModal.module.css";
 
-const ImageModal = ({ isOpen, onClose, modalFoto }) => {
+interface ModalInterface {
+  isOpen: boolean;
+  onClose: () => void;
+  modalFoto: string;
+}
+
+const ImageModal: React.FC<ModalInterface> = ({
+  isOpen,
+  onClose,
+  modalFoto,
+}) => {
   return (
     <div className={css["modal-div"]}>
       <Modal

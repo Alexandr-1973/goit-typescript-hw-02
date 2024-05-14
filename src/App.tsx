@@ -8,25 +8,47 @@ import LoadMoreBtn from "./components/load-more-btn/LoadMoreBtn";
 import ImageModal from "./components/image-modal/ImageModal";
 import fetchServer from "./api/fotos-api";
 
-function App() {
-  const [fotos, setFotos] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [page, setPage] = useState(1);
-  const [topicValue, setTopicValue] = useState("");
-  const [showBtn, setShowBtn] = useState(false);
-  const [modalFoto, setModalFoto] = useState("");
-  const [isModal, setIsModal] = useState(false);
+interface FotosInterface {
+  id: string;
+  urls: {
+    small: string;
+    regular: string;
+    [x: string]: any;
+  };
+  alt_description: string;
+  [y: string]: any;
+}
+
+interface DataInterface {
+  results: FotosInterface[];
+  total_pages: number;
+  [z: string]: any;
+}
+
+function App(): React.FC {
+  const [fotos, setFotos] = useState<FotosInterface[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [topicValue, setTopicValue] = useState<string>("");
+  const [showBtn, setShowBtn] = useState<boolean>(false);
+  const [modalFoto, setModalFoto] = useState<string>("");
+  const [isModal, setIsModal] = useState<boolean>(false);
 
   useEffect(() => {
     const serverQuery = async () => {
       try {
         setError(false);
         setLoading(true);
-        const data = await fetchServer(topicValue, page);
-        const { results, total_pages } = data;
-        setFotos([...fotos, ...results]);
-        setShowBtn(Boolean(total_pages && total_pages !== page));
+        const data: DataInterface | undefined = await fetchServer(
+          topicValue,
+          page
+        );
+        if (data) {
+          const { results, total_pages } = data;
+          setFotos([...fotos, ...results]);
+          setShowBtn(Boolean(total_pages && total_pages !== page));
+        }
       } catch (error) {
         setError(true);
       } finally {
@@ -46,23 +68,23 @@ function App() {
     event.target.reset();
   };
 
-  const onLoadMore = () => {
+  const onLoadMore = (): void => {
     setPage(page + 1);
   };
 
-  const handleClick = (value) => {
+  const handleClick = (value: string): void => {
     setModalFoto(value);
     setIsModal(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     setIsModal(false);
   };
 
   return (
     <>
       <SearchBar onSubmit={onSubmit} />
-      {error && <ErrorMessage />}
+      {error && topicValue && <ErrorMessage />}
       {fotos.length > 0 && (
         <ImageGallery items={fotos} handleClick={handleClick} />
       )}

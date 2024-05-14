@@ -1,6 +1,6 @@
 import { FidgetSpinner } from "react-loader-spinner";
 
-const Loader = () => {
+const Loader: React.FC = () => {
   return (
     <FidgetSpinner
       visible={true}
