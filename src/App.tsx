@@ -9,7 +9,6 @@ import LoadMoreBtn from "./components/load-more-btn/LoadMoreBtn";
 import ImageModal from "./components/image-modal/ImageModal";
 import fetchServer from "./api/fotos-api";
 import { FotosInterface } from "./types";
-// import { OnSubmit } from "./types";
 
 interface DataInterface {
   results: FotosInterface[];
@@ -52,7 +51,8 @@ const App: React.FC = () => {
 
   const onSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    const notify = () =>
+
+    const notify = (): string =>
       toast.error("Please enter search topic!", {
         duration: 3000,
         style: {
