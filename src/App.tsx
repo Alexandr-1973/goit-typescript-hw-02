@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import "./App.css";
 import SearchBar from "./components/search-bar/SearchBar";
 import Loader from "./components/loader/Loader";
@@ -7,17 +8,8 @@ import ImageGallery from "./components/image-gallery/ImageGallery";
 import LoadMoreBtn from "./components/load-more-btn/LoadMoreBtn";
 import ImageModal from "./components/image-modal/ImageModal";
 import fetchServer from "./api/fotos-api";
-
-interface FotosInterface {
-  id: string;
-  urls: {
-    small: string;
-    regular: string;
-    [x: string]: any;
-  };
-  alt_description: string;
-  [y: string]: any;
-}
+import { FotosInterface } from "./types";
+// import { OnSubmit } from "./types";
 
 interface DataInterface {
   results: FotosInterface[];
@@ -25,7 +17,7 @@ interface DataInterface {
   [z: string]: any;
 }
 
-function App(): React.FC {
+const App: React.FC = () => {
   const [fotos, setFotos] = useState<FotosInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
@@ -58,14 +50,31 @@ function App(): React.FC {
     serverQuery();
   }, [topicValue, page]);
 
-  const onSubmit = (event) => {
-    const topic = event.target.elements.topic.value.trim();
-    if (topic !== topicValue) {
-      setFotos([]);
-      setPage(1);
-      setTopicValue(topic);
+  const onSubmit = (event: FormEvent<HTMLFormElement>): void => {
+    event.preventDefault();
+    const notify = () =>
+      toast.error("Please enter search topic!", {
+        duration: 3000,
+        style: {
+          backgroundColor: "lightgreen",
+        },
+      });
+
+    let formData: FormData = new FormData(event.currentTarget);
+    const topic: string = String(formData.get("topic")).trim();
+
+    if (!topic) {
+      notify();
+      return;
+    } else {
+      if (topic !== topicValue) {
+        setFotos([]);
+        setPage(1);
+        setTopicValue(topic);
+      }
     }
-    event.target.reset();
+
+    event.currentTarget.reset();
   };
 
   const onLoadMore = (): void => {
@@ -93,6 +102,6 @@ function App(): React.FC {
       <ImageModal isOpen={isModal} onClose={closeModal} modalFoto={modalFoto} />
     </>
   );
-}
+};
 
 export default App;

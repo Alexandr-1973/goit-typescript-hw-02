@@ -1,28 +1,11 @@
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import css from "./SearchBar.module.css";
+import { OnSubmit } from "../../types";
 
-const SearchBar = ({ onSubmit }) => {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const notify = () =>
-      toast.error("Please enter search topic!", {
-        duration: 3000,
-        style: {
-          backgroundColor: "lightgreen",
-        },
-      });
-
-    if (!event.target.elements.topic.value) {
-      notify();
-      return;
-    } else {
-      onSubmit(event);
-    }
-  };
-
+const SearchBar: React.FC<OnSubmit> = ({ onSubmit }) => {
   return (
     <header>
-      <form onSubmit={handleSubmit} className={css.form}>
+      <form onSubmit={onSubmit} className={css.form}>
         <input
           name="topic"
           type="text"

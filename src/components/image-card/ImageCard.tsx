@@ -1,6 +1,12 @@
 import css from "./ImageCard.module.css";
+import { FotosInterface } from "../../types";
 
-const ImageCard = ({ item, handleClick }) => {
+type ImageCardType = {
+  item: FotosInterface;
+  handleClick: (value: string) => void;
+};
+
+const ImageCard: React.FC<ImageCardType> = ({ item, handleClick }) => {
   return (
     <div>
       <img
